@@ -49,11 +49,16 @@ fi
 
 # pack
 
-if [ -e "$tpl"]; then
-    cp $tpl $src/NuGet.Config
+if [ -e "$src" ]; then
+    if [ -e "$tpl" ]; then
+        cp $tpl $src/NuGet.Config
+    fi
+
+    cd $src
+elif [ -e "$tpl" ]; then
+    cp $tpl NuGet.Config
 fi
 
-cd $src
 if [ -e "$tmp" ]; then
     mkdir $tmp -p
 fi

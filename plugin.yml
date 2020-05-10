@@ -12,6 +12,9 @@ configuration:
   version:
     name: string
     description: Version
+  runtime:
+    name: string
+    description: dotnet runtime versions (2.2,3.0,3.1)    
   debug:
     name: int
     description: if value is greater then zero the plugin will expose debug information

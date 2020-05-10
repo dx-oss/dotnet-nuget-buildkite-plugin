@@ -14,12 +14,6 @@ function check_if_empty () {
 
 pwd=$(pwd)
 
-version=${VERSION:-""}
-version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
-check_if_empty $version VERSION 2
-echo version
-echo $version
-
 docker=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-docker}
 debug=${BUILDKITE_PLUGIN_DOTNET_NUGET_DEBUG:-0}
 if [ $debug -gt 0 ]; then
@@ -34,6 +28,12 @@ if [ $debug -gt 0 ]; then
     whoami
     pwd
 fi
+
+version=${VERSION:-""}
+version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
+check_if_empty $version VERSION 2
+echo version
+echo $version
 
 tmp=.tmp
 tmp=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-$tmp}

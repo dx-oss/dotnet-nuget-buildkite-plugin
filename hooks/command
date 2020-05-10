@@ -55,7 +55,7 @@ fi
 
 function dotnet_execute() {    
     if [ -d "$src" ]; then
-        $docker run -v $pwd:/build/$src -w /build --entrypoint $dotnet $image $*
+        $docker run -v $pwd:/build -w /build/$src --entrypoint $dotnet $image $*
     else
         $docker run -v $pwd:/build -w /build --entrypoint $dotnet $image $*
     fi    

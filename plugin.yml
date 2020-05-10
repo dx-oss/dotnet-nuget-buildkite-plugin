@@ -8,11 +8,11 @@ configuration:
     description: Fetch another key from SemVer from GitVersion
   baseurl:
     name: string
-    description: Which nuget base url to use (NUGET_BASEURL)
-  auth_user_key:
+    description: Fetch nuget base url from a env key, default is (NUGET_BASEURL)
+  auth_user:
     name: string
     description: Nuget username key
-  auth_token_key:
+  auth_secret:
     name: string
     description: Nuget token key
   packages:

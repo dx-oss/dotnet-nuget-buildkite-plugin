@@ -51,16 +51,13 @@ dryrun=${BUILDKITE_PLUGIN_DOTNET_NUGET_DRY:-0}
 github_owner=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 1)
 github_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 1)
 
-# nuget
-nuget_baseurl="https://nuget.pkg.github.com/${github_owner}/index.json"
-nuget_baseurl=${NUGET_BASEURL:-$nuget_baseurl}
-nuget_baseurl=${BUILDKITE_PLUGIN_DOTNET_NUGET_BASE_URL:-$nuget_baseurl}
-
-# check if a key is set and it exists in env, if not use default env
-nuget_auth_user=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER_KEY}
+# nuget - check if a key is set and it exists in env, if not use default env
+nuget_baseurl=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_BASEURL}
+nuget_baseurl=${nuget_baseurl:-$NUGET_BASEURL}
+nuget_auth_user=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER}
 nuget_auth_user=${nuget_auth_user:-$NUGET_AUTH_USER}
-nuget_auth_key=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_TOKEN_KEY}
-nuget_auth_key=${nuget_auth_key:-$NUGET_AUTH_KEY}
+nuget_auth_secret=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_SECRET}
+nuget_auth_secret=${nuget_auth_secret:-$NUGET_AUTH_SECRET}
 
 #nuget_packages=${BUILDKITE_PLUGIN_DOTNET_NUGET_PACKAGES}
 pull=${BUILDKITE_PLUGIN_DOTNET_NUGET_PULL:-1}
@@ -74,14 +71,14 @@ if [ -z "$nuget_baseurl" ]; then
 elif [ -z "$nuget_auth_user" ]; then
     echo "NUGET_AUTH_USER is empty"
     exit 1
-elif [ -z "$nuget_auth_key" ]; then
-    echo "NUGET_AUTH_KEY is empty"
+elif [ -z "$nuget_auth_secret" ]; then
+    echo "NUGET_AUTH_SECRET is empty"
     exit 1    
 fi
 
 export NUGET_BASEURL=$nuget_baseurl
 export NUGET_AUTH_USER=$nuget_auth_user
-export NUGET_AUTH_KEY=$nuget_auth_key
+export NUGET_AUTH_SECRET=$nuget_auth_secret
 
 # folders
 wrkdir=$pwd
@@ -105,7 +102,7 @@ fi
 
 function dotnet_execute() {
     env > .env
-    # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_key" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
+    # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_secret" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
     $docker run --env-file .env -v $pwd:/build -w $docker_wrkdir --entrypoint $dotnet $image $*
     # TODO: need to delete the file event when the run failed
     rm .env
@@ -142,7 +139,7 @@ function push_dir() {
         $buildkite_agent annotate --style info "nuget push $pb -s $url"
 
         if [ $dryrun -eq 0 ]; then
-            dotnet_execute nuget push $pb -k "$nuget_auth_user:$nuget_auth_key" -s $url  
+            dotnet_execute nuget push $pb -k "$nuget_auth_user:$nuget_auth_secret" -s $url  
         fi
     done
 }

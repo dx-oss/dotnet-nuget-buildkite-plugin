@@ -37,7 +37,7 @@ if [ $pull -gt 0 ]; then
 fi
 
 function dotnet_execute() {
-    $docker run -v $pwd:/src -w /src --entrypoint $dotnet $*
+    $docker run -v $pwd:/src -w /src --entrypoint $image $dotnet $*
 }
 
 if [ $debug -gt 0 ]; then

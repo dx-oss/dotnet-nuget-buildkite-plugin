@@ -81,20 +81,16 @@ if [ ! -d "$tmp" ]; then
     mkdir $tmp -p
 fi
 
-function dotnet_run () {    
-    local wrkdir=$1
-    # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_key" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
-    env > $pwd/.env
-    $docker run --env-file $pwd/.env -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
-    rm $pwd/.env
-}
-
-function dotnet_execute() {    
+function dotnet_execute() {
+    wrkdir=/build
     if [ -d "$src" ]; then
-        dotnet_run /build/$src $*
-    else
-        dotnet_run /build $*
-    fi    
+        wrkdir=/build/$src
+    fi
+    env > .env
+    # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_key" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
+    $docker run --env-file .env -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
+    # TODO: need to delete the file event when the run failed
+    rm .env
 }
 
 if [ $debug -gt 0 ]; then

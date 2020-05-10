@@ -26,7 +26,7 @@ image="dxdx/docker-builder-dotnet:2.2"
 image=${BUILDKITE_PLUGIN_DOTNET_NUGET_IMAGE:-$image}
 
 src=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-src}
-tpl=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-nuget.config.tpl}
+tpl=${BUILDKITE_PLUGIN_DOTNET_NUGET_TPL:-nuget.config.tpl}
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-0.0.0}
 dotnet=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOTNET:-dotnet}
 buildkite_agent=${BUILDKITE_PLUGIN_DOTNET_NUGET_AGENT:-buildkite-agent}

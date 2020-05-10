@@ -12,7 +12,10 @@ debug=${BUILDKITE_PLUGIN_DOTNET_NUGET_DEBUG:-0}
 if [ $debug -gt 0 ]; then
     set -euox pipefail
 
-    env
+    if [ $debug -eq 2 ]; then
+        env
+    fi
+
     $docker version
     $docker ps
     whoami

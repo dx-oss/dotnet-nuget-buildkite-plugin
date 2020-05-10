@@ -54,15 +54,15 @@ github_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 
 # nuget - check if a key is set and it exists in env, if not use default env
 nuget_provider=${BUILDKITE_PLUGIN_DOTNET_NUGET_PROVIDER:-$NUGET_PROVIDER}
 if [ "$nuget_provider" = "github" ]; then
-    nuget_baseurl=${!GITHUB_PACKAGE_NUGET_BASEURL}
-    nuget_pushurl=${!GITHUB_PACKAGE_NUGET_PUSHURL}
-    nuget_auth_user=${!GITHUB_PACKAGE_NUGET_USER}
-    nuget_auth_secret=${!GITHUB_PACKAGE_NUGET_SECRET}
+    nuget_baseurl=${GITHUB_PACKAGE_NUGET_BASEURL}
+    nuget_pushurl=${GITHUB_PACKAGE_NUGET_PUSHURL}
+    nuget_auth_user=${GITHUB_PACKAGE_NUGET_USER}
+    nuget_auth_secret=${GITHUB_PACKAGE_NUGET_SECRET}
 elif [ "$nuget_provider" = "jfrog" ]; then
-    nuget_baseurl=${!JFROG_NUGET_BASEURL}
-    nuget_pushurl=${!JFROG_NUGET_PUSHURL}
-    nuget_auth_user=${!JFROG_NUGET_USER}
-    nuget_auth_secret=${!JFROG_NUGET_SECRET}    
+    nuget_baseurl=${JFROG_NUGET_BASEURL}
+    nuget_pushurl=${JFROG_NUGET_PUSHURL}
+    nuget_auth_user=${JFROG_NUGET_USER}
+    nuget_auth_secret=${JFROG_NUGET_SECRET}    
 else
     nuget_baseurl=${!BUILDKITE_PLUGIN_DOTNET_NUGET_BASEURL}
     nuget_pushurl=${!BUILDKITE_PLUGIN_DOTNET_NUGET_PUSHURL}

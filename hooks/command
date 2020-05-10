@@ -5,6 +5,13 @@ set -euo pipefail
 
 # common
 
+function check_if_empty () {
+    if [ "$1" != "" ]; then
+        echo "$2 is empty"
+        exit $3
+    fi
+}
+
 pwd=$(pwd)
 
 docker=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-docker}
@@ -25,8 +32,10 @@ fi
 tmp=.tmp
 tmp=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-$tmp}
 
+# dotnet runtime version
 runtime="3.1"
 runtime=${BUILDKITE_PLUGIN_DOTNET_NUGET_RUNTIME:-$runtime}
+# docker image with dotnet runtime version 
 image="dxdx/docker-builder-dotnet:$runtime"
 image=${BUILDKITE_PLUGIN_DOTNET_NUGET_IMAGE:-$image}
 
@@ -37,10 +46,26 @@ dotnet=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOTNET:-dotnet}
 buildkite_agent=${BUILDKITE_PLUGIN_DOTNET_NUGET_AGENT:-buildkite-agent}
 configuration=${BUILDKITE_PLUGIN_DOTNET_NUGET_CONFIGURATION:-Release}
 
+# github
+github_owner=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 1)
+github_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 1)
+
+# nuget
+nuget_baseurl="https://nuget.pkg.github.com/${github_owner}/index.json"
+nuget_baseurl=${NUGET_BASEURL:-$nuget_baseurl}
+nuget_baseurl=${BUILDKITE_PLUGIN_DOTNET_NUGET_BASE_URL:-$nuget_baseurl}
+nuget_auth_user=${BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER:-$NUGET_AUTH_USER}
+nuget_auth_key=${BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_KEY:-$NUGET_AUTH_KEY}
 pull=${BUILDKITE_PLUGIN_DOTNET_NUGET_PULL:-1}
 if [ $pull -gt 0 ]; then
     $docker pull $image
 fi
+check_if_empty $nuget_baseurl NUGET_BASEURL 1
+check_if_empty $nuget_auth_user NUGET_AUTH_USER 1
+check_if_empty $nuget_auth_key NUGET_AUTH_KEY 1
+export NUGET_BASEURL=$nuget_baseurl
+export NUGET_AUTH_USER=$nuget_auth_user
+export NUGET_AUTH_KEY=$nuget_auth_key
 
 # folders
 if [ -d "$src" ]; then

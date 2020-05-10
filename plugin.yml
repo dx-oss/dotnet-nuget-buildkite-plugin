@@ -6,6 +6,15 @@ configuration:
   key:
     name: string
     description: Fetch another key from SemVer from GitVersion
+  baseurl:
+    name: string
+    description: Which nuget base url to use (NUGET_BASEURL)
+  auth_user:
+    name: string
+    description: Nuget username (NUGET_AUTH_USER)
+  auth_key:
+    name: string
+    description: Nuget token/key (NUGET_AUTH_KEY)
   image:
     name: string
     description: Docker image use to fetch GitVersion (dxdx/docker-builder-dotnet:2.2)

@@ -55,8 +55,13 @@ github_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 
 nuget_baseurl="https://nuget.pkg.github.com/${github_owner}/index.json"
 nuget_baseurl=${NUGET_BASEURL:-$nuget_baseurl}
 nuget_baseurl=${BUILDKITE_PLUGIN_DOTNET_NUGET_BASE_URL:-$nuget_baseurl}
-nuget_auth_user=${BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER:-$NUGET_AUTH_USER}
-nuget_auth_key=${BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_KEY:-$NUGET_AUTH_KEY}
+
+# check if a key is set and it exists in env, if not use default env
+nuget_auth_user=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER_KEY}
+nuget_auth_user=${nuget_auth_user:-$NUGET_AUTH_USER}
+nuget_auth_key=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_TOKEN_KEY}
+nuget_auth_key=${nuget_auth_key:-$NUGET_AUTH_KEY}
+
 #nuget_packages=${BUILDKITE_PLUGIN_DOTNET_NUGET_PACKAGES}
 pull=${BUILDKITE_PLUGIN_DOTNET_NUGET_PULL:-1}
 if [ $pull -gt 0 ]; then

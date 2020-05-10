@@ -9,12 +9,12 @@ configuration:
   baseurl:
     name: string
     description: Which nuget base url to use (NUGET_BASEURL)
-  auth_user:
+  auth_user_key:
     name: string
-    description: Nuget username (NUGET_AUTH_USER)
-  auth_key:
+    description: Nuget username key
+  auth_token_key:
     name: string
-    description: Nuget token/key (NUGET_AUTH_KEY)
+    description: Nuget token key
   packages:
     name: array
     description: Nuget packages to push, if not set it pushes all build packages

@@ -52,11 +52,11 @@ github_owner=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 1)
 github_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 1)
 
 # nuget - check if a key is set and it exists in env, if not use default env
-nuget_baseurl=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_BASEURL}
+nuget_baseurl=${!BUILDKITE_PLUGIN_DOTNET_NUGET_BASEURL}
 nuget_baseurl=${nuget_baseurl:-$NUGET_BASEURL}
-nuget_auth_user=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER}
+nuget_auth_user=${!BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER}
 nuget_auth_user=${nuget_auth_user:-$NUGET_AUTH_USER}
-nuget_auth_secret=${!$BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_SECRET}
+nuget_auth_secret=${!BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_SECRET}
 nuget_auth_secret=${nuget_auth_secret:-$NUGET_AUTH_SECRET}
 
 #nuget_packages=${BUILDKITE_PLUGIN_DOTNET_NUGET_PACKAGES}

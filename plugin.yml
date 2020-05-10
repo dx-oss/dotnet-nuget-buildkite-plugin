@@ -15,6 +15,9 @@ configuration:
   auth_key:
     name: string
     description: Nuget token/key (NUGET_AUTH_KEY)
+  packages:
+    name: array
+    description: Nuget packages to push, if not set it pushes all build packages
   image:
     name: string
     description: Docker image use to fetch GitVersion (dxdx/docker-builder-dotnet:2.2)

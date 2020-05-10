@@ -123,23 +123,27 @@ dotnet_execute pack -c $configuration /p:Version=$version --include-symbols -o $
 
 function push_dir() {
     local packages=$1
-    local ext=$2
+    local wdir=$2
+    local ext=$3
 
     for p in $packages
     do        
         package=$(basename $p $ext)
+        pb=$(basename $p)
+        pb=$wdir/$pb
         
-        $buildkite_agent annotate --style info "nuget push $package -s $nuget_baseurl"
+        $buildkite_agent annotate --style info "nuget push $pb -s $nuget_baseurl"
 
         if [ $dryrun -eq 0 ]; then
-            dotnet_execute nuget push $p -k "$nuget_auth_user:$nuget_auth_key" -s $nuget_baseurl  
+            dotnet_execute nuget push $pb -k "$nuget_auth_user:$nuget_auth_key" -s $nuget_baseurl  
         fi
     done
 }
 
 pack_dir=$wrkdir/$tmp/$configuration
 if [ -d "$pack_dir" ]; then
-    push_dir $(ls $pack_dir/*.nupkg | grep -v symbols) ".${version}.nupkg"
+    docker_pack_dir=$docker_wrkdir/$tmp/$configuration
+    push_dir $(ls $pack_dir/*.nupkg | grep -v symbols) $docker_pack_dir ".${version}.nupkg"
     # if [ $symbols -gt 0 ]; then
     #     push_dir $(ls $pack_dir/*.symbols.nupkg) ".${version}.symbols.nupkg"
     # fi

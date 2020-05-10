@@ -128,13 +128,11 @@ function push_dir() {
     for p in $packages
     do        
         package=$(basename $p $ext)
-
-        echo "$p"
-        echo "$nuget_baseurl$package/"
+        
+        $buildkite_agent annotate --style info "nuget push $package -s $nuget_baseurl"
 
         if [ $dryrun -eq 0 ]; then
-            #dotnet_execute nuget push $p -k $nuget_auth_user:$nuget_auth_key -s $nuget_baseurl$package/
-            echo "nuget push $p -k $nuget_auth_user:$nuget_auth_key -s $nuget_baseurl$package/"
+            dotnet_execute nuget push $p -k "$nuget_auth_user:$nuget_auth_key" -s $nuget_baseurl  
         fi
     done
 }
@@ -142,9 +140,9 @@ function push_dir() {
 pack_dir=$wrkdir/$tmp/$configuration
 if [ -d "$pack_dir" ]; then
     push_dir $(ls $pack_dir/*.nupkg | grep -v symbols) ".${version}.nupkg"
-    if [ $symbols -gt 0 ]; then
-        push_dir $(ls $pack_dir/*.symbols.nupkg) ".${version}.symbols.nupkg"
-    fi
+    # if [ $symbols -gt 0 ]; then
+    #     push_dir $(ls $pack_dir/*.symbols.nupkg) ".${version}.symbols.nupkg"
+    # fi
 else
     echo "Cannot find any packages to push in ($pack_dir)"
     exit 1

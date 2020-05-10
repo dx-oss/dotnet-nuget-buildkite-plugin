@@ -4,7 +4,7 @@ Buildkite plugin that pack dotnet project(s) and push them as nuget package(s) (
 
 ## TODO
 
-* Rewrite it to use go instead
+* Rewrite it to use go instead as version 2
 
 ## Example
 

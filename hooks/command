@@ -6,7 +6,7 @@ set -euo pipefail
 # common
 
 function check_if_empty () {
-    if [ "$1" == "" ]; then
+    if [ "$1" = "" ]; then
         echo "$2 is empty"
         exit $3
     fi

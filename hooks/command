@@ -82,7 +82,7 @@ if [ ! -d "$tmp" ]; then
 fi
 
 function dotnet_run () {    
-    local wkrdir=$1
+    local wrkdir=$1
     # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_key" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
     env > $pwd/.env
     $docker run --env-file $pwd/.env -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*

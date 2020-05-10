@@ -52,11 +52,26 @@ github_owner=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 1)
 github_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 1)
 
 # nuget - check if a key is set and it exists in env, if not use default env
-nuget_baseurl=${!BUILDKITE_PLUGIN_DOTNET_NUGET_BASEURL}
+nuget_provider=${BUILDKITE_PLUGIN_DOTNET_NUGET_PROVIDER:-$NUGET_PROVIDER}
+if [ "$nuget_provider" = "github" ]; then
+    nuget_baseurl=${!GITHUB_PACKAGE_NUGET_BASEURL}
+    nuget_pushurl=${!GITHUB_PACKAGE_NUGET_PUSHURL}
+    nuget_auth_user=${!GITHUB_PACKAGE_NUGET_USER}
+    nuget_auth_secret=${!GITHUB_PACKAGE_NUGET_SECRET}
+elif [ "$nuget_provider" = "jfrog" ]; then
+    nuget_baseurl=${!JFROG_NUGET_BASEURL}
+    nuget_pushurl=${!JFROG_NUGET_PUSHURL}
+    nuget_auth_user=${!JFROG_NUGET_USER}
+    nuget_auth_secret=${!JFROG_NUGET_SECRET}    
+else
+    nuget_baseurl=${!BUILDKITE_PLUGIN_DOTNET_NUGET_BASEURL}
+    nuget_pushurl=${!BUILDKITE_PLUGIN_DOTNET_NUGET_PUSHURL}
+    nuget_auth_user=${!BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER}
+    nuget_auth_secret=${!BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_SECRET}
+fi
 nuget_baseurl=${nuget_baseurl:-$NUGET_BASEURL}
-nuget_auth_user=${!BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_USER}
+nuget_pushurl=${nuget_pushurl:-$NUGET_PUSHURL}
 nuget_auth_user=${nuget_auth_user:-$NUGET_AUTH_USER}
-nuget_auth_secret=${!BUILDKITE_PLUGIN_DOTNET_NUGET_AUTH_SECRET}
 nuget_auth_secret=${nuget_auth_secret:-$NUGET_AUTH_SECRET}
 
 #nuget_packages=${BUILDKITE_PLUGIN_DOTNET_NUGET_PACKAGES}
@@ -65,9 +80,15 @@ if [ $pull -gt 0 ]; then
     $docker pull $image
 fi
 
-if [ -z "$nuget_baseurl" ]; then
+if [ -z "$nuget_provider" ]; then
+    echo "NUGET_PROVIDER is empty"
+    exit 1
+elif [ -z "$nuget_baseurl" ]; then
     echo "NUGET_BASEURL is empty"
     exit 1
+elif [ -z "$nuget_pushurl" ]; then
+    echo "NUGET_PUSHURL is empty"
+    exit 1    
 elif [ -z "$nuget_auth_user" ]; then
     echo "NUGET_AUTH_USER is empty"
     exit 1
@@ -134,7 +155,7 @@ function push_dir() {
         pb=$(basename $p)
         pb=$wdir/$pb
         
-        local url=$(echo $nuget_baseurl | sed -s "s/PACKAGE/$package/gi")
+        local url=$(echo "$nuget_baseurl" | sed -s "s/PACKAGE/$package/gi")
         
         $buildkite_agent annotate --style info "nuget push $pb -s $url"
 

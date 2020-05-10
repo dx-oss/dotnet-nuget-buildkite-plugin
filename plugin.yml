@@ -9,6 +9,9 @@ configuration:
   baseurl:
     name: string
     description: Fetch nuget base url from a env key, default is (NUGET_BASEURL)
+  pushurl:
+    name: string
+    description: Where to push the nuget url a env key, default is (NUGET_PUSHURL)    
   auth_user:
     name: string
     description: Nuget username key

@@ -19,7 +19,7 @@ if [ $debug -gt 0 ]; then
     $docker version
     $docker ps
     whoami
-    pwd    
+    pwd
 fi
 
 tmp=.tmp
@@ -33,14 +33,32 @@ tpl=${BUILDKITE_PLUGIN_DOTNET_NUGET_TPL:-nuget.config.tpl}
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-0.0.0}
 dotnet=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOTNET:-dotnet}
 buildkite_agent=${BUILDKITE_PLUGIN_DOTNET_NUGET_AGENT:-buildkite-agent}
+configuration=${BUILDKITE_PLUGIN_DOTNET_NUGET_CONFIGURATION:-Release}
 
 pull=${BUILDKITE_PLUGIN_DOTNET_NUGET_PULL:-1}
 if [ $pull -gt 0 ]; then
     $docker pull $image
 fi
 
-function dotnet_execute() {
-    $docker run -v $pwd:/build -w /build --entrypoint $dotnet $image $*
+# folders
+if [ -e "$src" ]; then
+    if [ -e "$tpl" ]; then
+        cp $tpl $src/NuGet.Config
+    fi
+elif [ -e "$tpl" ]; then
+    cp $tpl NuGet.Config
+fi
+
+if [ -e "$tmp" ]; then
+    mkdir $tmp -p
+fi
+
+function dotnet_execute() {    
+    if [ -e "$src" ]; then
+        $docker run -v $pwd:/build/$src -w /build --entrypoint $dotnet $image $*
+    else
+        $docker run -v $pwd:/build -w /build --entrypoint $dotnet $image $*
+    fi    
 }
 
 if [ $debug -gt 0 ]; then
@@ -52,19 +70,6 @@ fi
 
 # pack
 
-if [ -e "$src" ]; then
-    if [ -e "$tpl" ]; then
-        cp $tpl $src/NuGet.Config
-    fi
-    cd $src
-elif [ -e "$tpl" ]; then
-    cp $tpl NuGet.Config
-fi
-
-if [ -e "$tmp" ]; then
-    mkdir $tmp -p
-fi
-
-dotnet_execute pack -c Release /p:Version=$version --include-symbols -o $tmp/Release
+dotnet_execute pack -c $configuration /p:Version=$version --include-symbols -o $tmp/$configuration
 
 # push

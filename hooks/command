@@ -70,9 +70,11 @@ export NUGET_AUTH_USER=$nuget_auth_user
 export NUGET_AUTH_KEY=$nuget_auth_key
 
 # folders
-wrkdir=/build
+wrkdir=$pwd
+docker_wrkdir=/build
 if [ -d "$src" ]; then
-    wrkdir=/build/$src
+    wrkdir=$wrkdir/$src
+    docker_wrkdir=$docker_wrkdir/$src
 fi
 
 if [ -d "$src" ]; then
@@ -90,7 +92,7 @@ fi
 function dotnet_execute() {
     env > .env
     # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_key" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
-    $docker run --env-file .env -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
+    $docker run --env-file .env -v $pwd:/build -w $docker_wrkdir --entrypoint $dotnet $image $*
     # TODO: need to delete the file event when the run failed
     rm .env
 }

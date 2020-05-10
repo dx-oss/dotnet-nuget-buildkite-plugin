@@ -143,7 +143,7 @@ function push_dir() {
 pack_dir=$wrkdir/$tmp/$configuration
 if [ -d "$pack_dir" ]; then
     docker_pack_dir=$docker_wrkdir/$tmp/$configuration
-    push_dir $(ls $pack_dir/*.nupkg | grep -v symbols) $docker_pack_dir ".${version}.nupkg"
+    push_dir "$(ls $pack_dir/*.nupkg | grep -v symbols)" $docker_pack_dir ".${version}.nupkg"
     # if [ $symbols -gt 0 ]; then
     #     push_dir $(ls $pack_dir/*.symbols.nupkg) ".${version}.symbols.nupkg"
     # fi

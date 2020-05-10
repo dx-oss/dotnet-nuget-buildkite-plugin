@@ -41,7 +41,7 @@ if [ $pull -gt 0 ]; then
 fi
 
 # folders
-if [ -e "$src" ]; then
+if [ -d "$src" ]; then
     if [ -e "$tpl" ]; then
         cp $tpl $src/NuGet.Config
     fi
@@ -49,12 +49,12 @@ elif [ -e "$tpl" ]; then
     cp $tpl NuGet.Config
 fi
 
-if [ -e "$tmp" ]; then
+if [ ! -d "$tmp" ]; then
     mkdir $tmp -p
 fi
 
 function dotnet_execute() {    
-    if [ -e "$src" ]; then
+    if [ -d "$src" ]; then
         $docker run -v $pwd:/build/$src -w /build --entrypoint $dotnet $image $*
     else
         $docker run -v $pwd:/build -w /build --entrypoint $dotnet $image $*
@@ -73,3 +73,5 @@ fi
 dotnet_execute pack -c $configuration /p:Version=$version --include-symbols -o $tmp/$configuration
 
 # push
+
+echo push

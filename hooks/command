@@ -14,7 +14,7 @@ function check_if_empty () {
 
 pwd=$(pwd)
 
-version=${VERSION}
+version=${VERSION:-""}
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
 check_if_empty $version VERSION 2
 

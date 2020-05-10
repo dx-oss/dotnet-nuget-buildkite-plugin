@@ -17,6 +17,8 @@ pwd=$(pwd)
 version=${VERSION:-""}
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
 check_if_empty $version VERSION 2
+echo version
+echo $version
 
 docker=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-docker}
 debug=${BUILDKITE_PLUGIN_DOTNET_NUGET_DEBUG:-0}

@@ -132,10 +132,12 @@ function push_dir() {
         pb=$(basename $p)
         pb=$wdir/$pb
         
-        $buildkite_agent annotate --style info "nuget push $pb -s $nuget_baseurl"
+        local url=$(echo $nuget_baseurl | sed -s "s/PACKAGE/$package/gi")
+        
+        $buildkite_agent annotate --style info "nuget push $pb -s $url"
 
         if [ $dryrun -eq 0 ]; then
-            dotnet_execute nuget push $pb -k "$nuget_auth_user:$nuget_auth_key" -s $nuget_baseurl  
+            dotnet_execute nuget push $pb -k "$nuget_auth_user:$nuget_auth_key" -s $url  
         fi
     done
 }

@@ -6,9 +6,9 @@ set -euo pipefail
 # common
 
 function check_if_empty () {
-    if [ "$1" = "" ]; then
+    if [ -z "$1" ]; then
         echo "$2 is empty"
-        exit $3
+        exit 1
     fi
 }
 
@@ -31,7 +31,7 @@ fi
 
 version=${VERSION:-""}
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
-check_if_empty $version VERSION 2
+check_if_empty $version VERSION
 echo version
 echo $version
 
@@ -68,9 +68,9 @@ pull=${BUILDKITE_PLUGIN_DOTNET_NUGET_PULL:-1}
 if [ $pull -gt 0 ]; then
     $docker pull $image
 fi
-check_if_empty $nuget_baseurl NUGET_BASEURL 1
-check_if_empty $nuget_auth_user NUGET_AUTH_USER 1
-check_if_empty $nuget_auth_key NUGET_AUTH_KEY 1
+check_if_empty $nuget_baseurl NUGET_BASEURL
+check_if_empty $nuget_auth_user NUGET_AUTH_USER
+check_if_empty $nuget_auth_key NUGET_AUTH_KEY
 
 export NUGET_BASEURL=$nuget_baseurl
 export NUGET_AUTH_USER=$nuget_auth_user

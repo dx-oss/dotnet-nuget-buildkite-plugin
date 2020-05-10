@@ -1,0 +1,27 @@
+name: "dotnet-nuget"
+description: Buildkite plugin that pack and build nuget package
+author: https://github.com/dx-oss
+requirements: ["docker","buildkite-agent"]
+configuration:
+  key:
+    name: string
+    description: Fetch another key from SemVer from GitVersion
+  image:
+    name: string
+    description: Docker image use to fetch GitVersion (dxdx/docker-builder-dotnet:2.2)
+  version:
+    name: string
+    description: Version
+  debug:
+    name: int
+    description: if value is greater then zero the plugin will expose debug information
+  pull:
+    name: int
+    description: if value is greater then zero the image would be pull first
+  dry:
+    name: int
+    description: if value is greater then zero the plugin will not pusht the new release
+  agent:
+    name: string
+    description: buildkite-agent binary (https://github.com/buildkite/agent)
+  additionalProperties: false

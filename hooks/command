@@ -25,7 +25,7 @@ tmp=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-$tmp}
 image="dxdx/docker-builder-dotnet:2.2"
 image=${BUILDKITE_PLUGIN_DOTNET_NUGET_IMAGE:-$image}
 
-src=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-$pwd/src}
+src=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-src}
 tpl=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-nuget.config.tpl}
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-0.0.0}
 dotnet=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOTNET:-dotnet}
@@ -37,7 +37,7 @@ if [ $pull -gt 0 ]; then
 fi
 
 function dotnet_execute() {
-    $docker run -v $pwd:/src -w /src --entrypoint $dotnet $image $*
+    $docker run -v $pwd:/build -w /build --entrypoint $dotnet $image $*
 }
 
 if [ $debug -gt 0 ]; then
@@ -53,7 +53,6 @@ if [ -e "$src" ]; then
     if [ -e "$tpl" ]; then
         cp $tpl $src/NuGet.Config
     fi
-
     cd $src
 elif [ -e "$tpl" ]; then
     cp $tpl NuGet.Config
@@ -62,6 +61,7 @@ fi
 if [ -e "$tmp" ]; then
     mkdir $tmp -p
 fi
+
 dotnet_execute pack -c Release /p:Version=$version --include-symbols -o $tmp/Release
 
 # push

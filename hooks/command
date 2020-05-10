@@ -100,6 +100,7 @@ fi
 export NUGET_BASEURL=$nuget_baseurl
 export NUGET_AUTH_USER=$nuget_auth_user
 export NUGET_AUTH_SECRET=$nuget_auth_secret
+export NUGET_AUTH_KEY=$nuget_auth_secret
 
 # folders
 wrkdir=$pwd

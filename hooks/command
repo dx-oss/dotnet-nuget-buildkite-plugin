@@ -25,7 +25,7 @@ fi
 tmp=.tmp
 tmp=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-$tmp}
 
-image="dxdx/docker-builder-dotnet:2.2"
+image="dxdx/docker-builder-dotnet:3.1"
 image=${BUILDKITE_PLUGIN_DOTNET_NUGET_IMAGE:-$image}
 
 src=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-src}

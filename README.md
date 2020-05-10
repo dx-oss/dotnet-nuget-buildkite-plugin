@@ -2,6 +2,10 @@
 
 Buildkite plugin that pack dotnet project(s) and push them as nuget package(s) (dotnet-nuget)
 
+## TODO
+
+* Rewrite it to use go instead
+
 ## Example
 
 Add the following to your `pipeline.yml`:

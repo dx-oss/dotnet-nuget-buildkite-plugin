@@ -26,7 +26,10 @@ configuration:
     description: Version
   runtime:
     name: string
-    description: dotnet runtime versions (2.2,3.0,3.1)    
+    description: dotnet runtime versions (2.2,3.0,3.1)
+  symbols:
+    name: int
+    description: if value is greater then zero the plugin will push the symbols packages also
   debug:
     name: int
     description: if value is greater then zero the plugin will expose debug information. when the value are 2 it will also expose extended information.

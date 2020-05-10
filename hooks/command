@@ -14,6 +14,9 @@ function check_if_empty () {
 
 pwd=$(pwd)
 
+version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$VERSION}
+check_if_empty $version VERSION 2
+
 docker=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-docker}
 debug=${BUILDKITE_PLUGIN_DOTNET_NUGET_DEBUG:-0}
 if [ $debug -gt 0 ]; then
@@ -41,10 +44,11 @@ image=${BUILDKITE_PLUGIN_DOTNET_NUGET_IMAGE:-$image}
 
 src=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-src}
 tpl=${BUILDKITE_PLUGIN_DOTNET_NUGET_TPL:-nuget.config.tpl}
-version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-0.0.0}
 dotnet=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOTNET:-dotnet}
 buildkite_agent=${BUILDKITE_PLUGIN_DOTNET_NUGET_AGENT:-buildkite-agent}
 configuration=${BUILDKITE_PLUGIN_DOTNET_NUGET_CONFIGURATION:-Release}
+symbols=${BUILDKITE_PLUGIN_DOTNET_NUGET_SYMBOLS:-1}
+dryrun=${BUILDKITE_PLUGIN_DOTNET_NUGET_DRY:-0}
 
 # github
 github_owner=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 1)
@@ -112,15 +116,30 @@ dotnet_execute pack -c $configuration /p:Version=$version --include-symbols -o $
 
 # TODO: check packages input
 
+function push_dir() {
+    local packages=$1
+    local ext=$2
+
+    for p in $packages
+    do        
+        package=$(basename $p $ext)
+
+        echo "$p"
+        echo "$nuget_baseurl$package/"
+
+        if [ $dryrun -eq 0 ]; then
+            #dotnet_execute nuget push $p -k $nuget_auth_user:$nuget_auth_key -s $nuget_baseurl$package/
+            echo "nuget push $p -k $nuget_auth_user:$nuget_auth_key -s $nuget_baseurl$package/"
+        fi
+    done
+}
+
 pack_dir=$wrkdir/$tmp/$configuration
 if [ -d "$pack_dir" ]; then
-    packages=$(ls $pack_dir/*.nupkg)
-    for p in $packages
-    do
-        echo $p
-
-        #dotnet_execute nuget push $p -k $nuget_auth_user:$nuget_auth_key -s $NUGET_BASEURL$NUGET_PACKAGE/
-    done
+    push_dir $(ls $pack_dir/*.nupkg | grep -v symbols) ".${version}.nupkg"
+    if [ $symbols -gt 0 ]; then
+        push_dir $(ls $pack_dir/*.symbols.nupkg) ".${version}.symbols.nupkg"
+    fi
 else
     echo "Cannot find any packages to push in ($pack_dir)"
     exit 1

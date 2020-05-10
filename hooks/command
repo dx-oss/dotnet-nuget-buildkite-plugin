@@ -63,6 +63,7 @@ fi
 check_if_empty $nuget_baseurl NUGET_BASEURL 1
 check_if_empty $nuget_auth_user NUGET_AUTH_USER 1
 check_if_empty $nuget_auth_key NUGET_AUTH_KEY 1
+
 export NUGET_BASEURL=$nuget_baseurl
 export NUGET_AUTH_USER=$nuget_auth_user
 export NUGET_AUTH_KEY=$nuget_auth_key
@@ -80,11 +81,19 @@ if [ ! -d "$tmp" ]; then
     mkdir $tmp -p
 fi
 
+function dotnet_run () {    
+    local wkrdir=$1
+    # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_key" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
+    env > $pwd/.env
+    $docker run --env-file $pwd/.env -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
+    rm $pwd/.env
+}
+
 function dotnet_execute() {    
     if [ -d "$src" ]; then
-        $docker run -v $pwd:/build -w /build/$src --entrypoint $dotnet $image $*
+        dotnet_run /build/$src
     else
-        $docker run -v $pwd:/build -w /build --entrypoint $dotnet $image $*
+        dotnet_run /build
     fi    
 }
 

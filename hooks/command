@@ -91,9 +91,9 @@ function dotnet_run () {
 
 function dotnet_execute() {    
     if [ -d "$src" ]; then
-        dotnet_run /build/$src
+        dotnet_run /build/$src $*
     else
-        dotnet_run /build
+        dotnet_run /build $*
     fi    
 }
 

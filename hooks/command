@@ -81,7 +81,7 @@ nuget_auth_user=${nuget_auth_user:-$NUGET_AUTH_USER}
 nuget_auth_secret=${nuget_auth_secret:-$NUGET_AUTH_SECRET}
 
 #nuget_packages=${BUILDKITE_PLUGIN_DOTNET_NUGET_PACKAGES}
-pull=${BUILDKITE_PLUGIN_DOTNET_NUGET_PULL:-1}
+pull=${BUILDKITE_PLUGIN_DOTNET_NUGET_PULL:-0}
 if [ $pull -gt 0 ]; then
     $docker pull $image
 fi

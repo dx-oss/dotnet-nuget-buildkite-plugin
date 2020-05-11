@@ -47,9 +47,10 @@ configuration=${BUILDKITE_PLUGIN_DOTNET_NUGET_CONFIGURATION:-Release}
 symbols=${BUILDKITE_PLUGIN_DOTNET_NUGET_SYMBOLS:-1}
 dryrun=${BUILDKITE_PLUGIN_DOTNET_NUGET_DRY:-0}
 
-# github
-github_owner=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 1)
-github_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 1)
+# git
+git_owner=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 1)
+git_repo=$(echo "$BUILDKITE_REPO" | cut -d: -f 2 | cut -d/ -f 2 | cut -d. -f 1)
+git_url=https://github.com/${git_owner}/${git_repo}/
 
 # nuget - check if a key is set and it exists in env, if not use default env
 nuget_provider=${BUILDKITE_PLUGIN_DOTNET_NUGET_PROVIDER:-$NUGET_PROVIDER}
@@ -139,7 +140,7 @@ fi
 
 # pack
 
-dotnet_execute pack -c $configuration /p:Version=$version --include-symbols -o $tmp/$configuration
+dotnet_execute pack -c $configuration /p:Version=$version /p:RepositoryUrl=$git_url --include-symbols -o $tmp/$configuration
 
 # push
 
@@ -157,8 +158,8 @@ function push_dir() {
         pb=$wdir/$pb
         
         local url=$(echo "$nuget_baseurl" | sed -s "s/PACKAGE/$package/gi")
-        
-        $buildkite_agent annotate --style info "nuget push $pb -s $url"
+
+        echo "nuget push $pb -s $url"
 
         if [ $dryrun -eq 0 ]; then
             dotnet_execute nuget push $pb -k "$nuget_auth_user:$nuget_auth_secret" -s $url  

@@ -1,7 +1,7 @@
 name: "dotnet-nuget"
 description: Buildkite plugin that pack and build nuget package
 author: https://github.com/dx-oss
-requirements: ["docker","buildkite-agent"]
+requirements: ["docker","buildkite-agent","semver"]
 configuration:
   version:
     name: string

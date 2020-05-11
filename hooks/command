@@ -145,7 +145,8 @@ fi
 
 # pack
 
-dotnet_execute pack -c $configuration /p:Version=$version /p:RepositoryUrl=$git_url --include-symbols -o $tmp/$configuration
+clean_version=$(docker run --entrypoint semver ${image} get release ${version})
+dotnet_execute pack -c $configuration /p:Version=$clean_version /p:RepositoryUrl=$git_url --include-symbols -o $tmp/$configuration
 
 # push
 

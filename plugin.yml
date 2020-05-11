@@ -5,13 +5,13 @@ requirements: ["docker","buildkite-agent"]
 configuration:
   key:
     name: string
-    description: Fetch another key from SemVer from GitVersion
+    description: Fetch another key from GitVersion, default (SemVer)
   baseurl:
     name: string
-    description: Fetch nuget base url from a env key, default is (NUGET_BASEURL)
+    description: Fetch nuget base url from a env key, default (NUGET_BASEURL)
   pushurl:
     name: string
-    description: Where to push the nuget url a env key, default is (NUGET_PUSHURL)    
+    description: Where to push the nuget url a env key, default (NUGET_PUSHURL)    
   auth_user:
     name: string
     description: Nuget username key
@@ -26,10 +26,10 @@ configuration:
     description: Docker image use to fetch GitVersion (dxdx/docker-builder-dotnet:2.2)
   version:
     name: string
-    description: Version
+    description: Version using [VERSION, BUILDKITE_TAG] env variables if not set (required)
   runtime:
     name: string
-    description: dotnet runtime versions (2.2,3.0,3.1)
+    description: dotnet runtime versions (2.2,3.0,3.1,latest), default (latest=3.1)
   symbols:
     name: int
     description: if value is greater then zero the plugin will push the symbols packages also

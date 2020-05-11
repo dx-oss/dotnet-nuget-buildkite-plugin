@@ -22,10 +22,10 @@ if [ $debug -gt 0 ]; then
     pwd
 fi
 
-version=${VERSION:-""}
+version=${VERSION:-$BUILDKITE_TAG}
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
 if [ -z "$version" ]; then
-    echo "VERSION is empty"
+    echo "VERSION/BUILDKITE_TAG is empty"
     exit 1
 fi
 
@@ -33,8 +33,12 @@ tmp=.tmp
 tmp=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-$tmp}
 
 # dotnet runtime version
-runtime="3.1"
+runtime_latest="3.1"
+runtime="latest"
 runtime=${BUILDKITE_PLUGIN_DOTNET_NUGET_RUNTIME:-$runtime}
+if [ "$runtime" = "latest" ]; then
+    runtime=$runtime_latest
+fi
 # docker image with dotnet runtime version 
 image="dxdx/docker-builder-dotnet:$runtime"
 image=${BUILDKITE_PLUGIN_DOTNET_NUGET_IMAGE:-$image}

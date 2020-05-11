@@ -22,7 +22,7 @@ if [ $debug -gt 0 ]; then
     pwd
 fi
 
-version_meta=${$buildkite_agent meta-data get version}
+version_meta=$($buildkite_agent meta-data get version)
 version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$VERSION}
 version=${version:-$version_meta}
 version=${version:-$BUILDKITE_TAG}

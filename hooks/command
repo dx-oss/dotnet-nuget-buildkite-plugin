@@ -7,6 +7,7 @@ set -euo pipefail
 
 pwd=$(pwd)
 
+buildkite_agent=${BUILDKITE_PLUGIN_DOTNET_NUGET_AGENT:-buildkite-agent}
 docker=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOCKER:-docker}
 debug=${BUILDKITE_PLUGIN_DOTNET_NUGET_DEBUG:-0}
 if [ $debug -gt 0 ]; then
@@ -48,7 +49,6 @@ image=${BUILDKITE_PLUGIN_DOTNET_NUGET_IMAGE:-$image}
 src=${BUILDKITE_PLUGIN_DOTNET_NUGET_SRC:-src}
 tpl=${BUILDKITE_PLUGIN_DOTNET_NUGET_TPL:-nuget.config.tpl}
 dotnet=${BUILDKITE_PLUGIN_DOTNET_NUGET_DOTNET:-dotnet}
-buildkite_agent=${BUILDKITE_PLUGIN_DOTNET_NUGET_AGENT:-buildkite-agent}
 configuration=${BUILDKITE_PLUGIN_DOTNET_NUGET_CONFIGURATION:-Release}
 symbols=${BUILDKITE_PLUGIN_DOTNET_NUGET_SYMBOLS:-1}
 dryrun=${BUILDKITE_PLUGIN_DOTNET_NUGET_DRY:-0}

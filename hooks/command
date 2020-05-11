@@ -24,7 +24,8 @@ if [ $debug -gt 0 ]; then
 fi
 
 version_meta=`$buildkite_agent meta-data get version || true`
-version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$VERSION}
+version=${VERSION:-""}
+version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
 version=${version:-$version_meta}
 version=${version:-$BUILDKITE_TAG}
 if [ -z "$version" ]; then

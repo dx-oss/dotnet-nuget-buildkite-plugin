@@ -22,8 +22,10 @@ if [ $debug -gt 0 ]; then
     pwd
 fi
 
-version=${VERSION:-$BUILDKITE_TAG}
-version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$version}
+version_meta=${$buildkite_agent meta-data get version}
+version=${BUILDKITE_PLUGIN_DOTNET_NUGET_VERSION:-$VERSION}
+version=${version:-$version_meta}
+version=${version:-$BUILDKITE_TAG}
 if [ -z "$version" ]; then
     echo "VERSION/BUILDKITE_TAG is empty"
     exit 1

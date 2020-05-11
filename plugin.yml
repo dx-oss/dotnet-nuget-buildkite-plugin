@@ -3,9 +3,9 @@ description: Buildkite plugin that pack and build nuget package
 author: https://github.com/dx-oss
 requirements: ["docker","buildkite-agent"]
 configuration:
-  key:
+  version:
     name: string
-    description: Fetch another key from GitVersion, default (SemVer)
+    description: Version using [CONFIG:VERSION, META:VERSION, ENV:VERSION, ENV:BUILDKITE_TAG] variables if not set (required) 
   baseurl:
     name: string
     description: Fetch nuget base url from a env key, default (NUGET_BASEURL)
@@ -24,9 +24,6 @@ configuration:
   image:
     name: string
     description: Docker image use to fetch GitVersion (dxdx/docker-builder-dotnet:2.2)
-  version:
-    name: string
-    description: Version using [VERSION, BUILDKITE_TAG] env variables if not set (required)
   runtime:
     name: string
     description: dotnet runtime versions (2.2,3.0,3.1,latest), default (latest=3.1)

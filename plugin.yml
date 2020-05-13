@@ -6,6 +6,9 @@ configuration:
   version:
     name: string
     description: Version using [CONFIG:VERSION, META:VERSION, ENV:VERSION, ENV:BUILDKITE_TAG] variables if not set (required) 
+  provider:
+    name: string
+    description: Get the nuget provider instead of (NUGET_PROVIDER)
   baseurl:
     name: string
     description: Fetch nuget base url from a env key, default (NUGET_BASEURL)

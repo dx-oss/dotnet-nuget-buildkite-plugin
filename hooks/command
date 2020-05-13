@@ -86,10 +86,7 @@ if [ $pull -gt 0 ]; then
     $docker pull $image
 fi
 
-if [ -z "$nuget_provider" ]; then
-    echo "NUGET_PROVIDER is empty"
-    exit 1
-elif [ -z "$nuget_baseurl" ]; then
+if [ -z "$nuget_baseurl" ]; then
     echo "NUGET_BASEURL is empty"
     exit 1
 elif [ -z "$nuget_pushurl" ]; then

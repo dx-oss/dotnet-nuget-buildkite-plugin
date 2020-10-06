@@ -127,6 +127,9 @@ fi
 
 function dotnet_execute() {
     env | grep "=" > .env
+    if [ $debug -gt 0 ]; then
+        cat .env
+    fi    
     # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_secret" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
     $docker run --env-file .env -v $pwd:/build -w $docker_wrkdir --entrypoint $dotnet $image $*
     # TODO: need to delete the file event when the run failed

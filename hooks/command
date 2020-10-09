@@ -131,7 +131,13 @@ function dotnet_execute() {
         echo ".env"
         cat .env
         echo "NuGet.Config"
-        cat NuGet.Config
+        if [ -d "$src" ]; then
+            if [ -e "$tpl" ]; then
+                cp $tpl $src/NuGet.Config
+            fi
+        elif [ -e "$tpl" ]; then
+            cp $tpl NuGet.Config
+        fi
     fi    
     # $docker run -e "NUGET_BASEURL=$nuget_baseurl" -e "NUGET_AUTH_USER=$nuget_auth_user" -e "NUGET_AUTH_KEY=$nuget_auth_secret" -v $pwd:/build -w $wrkdir --entrypoint $dotnet $image $*
     $docker run --env-file .env -v $pwd:/build -w $docker_wrkdir --entrypoint $dotnet $image $*

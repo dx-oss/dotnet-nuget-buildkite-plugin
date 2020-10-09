@@ -177,7 +177,7 @@ function push_dir() {
         echo "nuget push $pb -s $url"
 
         if [ $dryrun -eq 0 ]; then
-            dotnet_execute nuget push $pb -k "$nuget_auth_user:$nuget_auth_secret" -s $url  
+            dotnet_execute nuget push $pb -s $url  
         fi
     done
 }
